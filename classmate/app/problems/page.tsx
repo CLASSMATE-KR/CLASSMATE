@@ -4,15 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabaseClient } from '@/lib/supabase-client'
-
-interface Problem {
-  id: string
-  title: string
-  description: string
-  difficulty: 'easy' | 'medium' | 'hard'
-  subject: string
-  createdAt: string
-}
+import { getAllProblems, type Problem } from '@/lib/problems-data'
 
 export default function ProblemsPage() {
   const router = useRouter()
@@ -26,18 +18,18 @@ export default function ProblemsPage() {
       setIsAuthenticated(!!session)
       
       if (session) {
-        // TODO: Supabase에서 문제 목록 가져오기
-        // 임시 데이터
-        setProblems([
-          {
-            id: '1',
-            title: '수학 문제 1',
-            description: '기본적인 대수 문제입니다.',
-            difficulty: 'easy',
-            subject: '수학',
-            createdAt: new Date().toISOString()
-          }
-        ])
+        // 파싱된 문제 데이터 사용
+        const allProblems = getAllProblems()
+        const problemList = allProblems.map(p => ({
+          id: p.id.toString(),
+          title: p.title,
+          description: p.content,
+          difficulty: p.difficulty,
+          subject: p.subject,
+          category: p.category,
+          createdAt: new Date().toISOString()
+        }))
+        setProblems(problemList)
       }
       setLoading(false)
     }
@@ -164,6 +156,11 @@ export default function ProblemsPage() {
                     <span>{problem.subject}</span>
                     <span>→</span>
                   </div>
+                  {(problem as any).category && (
+                    <div className="mt-2 text-xs text-gray-400">
+                      {(problem as any).category}
+                    </div>
+                  )}
                 </Link>
               ))}
             </div>

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { supabaseClient } from '@/lib/supabase-client'
+import { getProblemById, type Problem as ProblemData } from '@/lib/problems-data'
 
 interface Problem {
   id: string
@@ -14,6 +15,8 @@ interface Problem {
   subject: string
   answer?: string
   solution?: string
+  options?: string[]
+  correctAnswer?: number
 }
 
 export default function ProblemDetailPage() {
@@ -24,8 +27,9 @@ export default function ProblemDetailPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const [problem, setProblem] = useState<Problem | null>(null)
   const [loading, setLoading] = useState(true)
-  const [userAnswer, setUserAnswer] = useState('')
+  const [userAnswer, setUserAnswer] = useState<number | null>(null)
   const [showSolution, setShowSolution] = useState(false)
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -33,18 +37,24 @@ export default function ProblemDetailPage() {
       setIsAuthenticated(!!session)
       
       if (session && problemId) {
-        // TODO: Supabase에서 문제 상세 정보 가져오기
-        // 임시 데이터
-        setProblem({
-          id: problemId,
-          title: '수학 문제 1',
-          description: '기본적인 대수 문제입니다.',
-          content: '다음 방정식을 풀어보세요:\n\n2x + 5 = 13',
-          difficulty: 'easy',
-          subject: '수학',
-          answer: 'x = 4',
-          solution: '2x + 5 = 13\n2x = 13 - 5\n2x = 8\nx = 4'
-        })
+        // 파싱된 문제 데이터에서 찾기
+        const problemData = getProblemById(parseInt(problemId))
+        if (problemData) {
+          setProblem({
+            id: problemId,
+            title: problemData.title,
+            description: problemData.category,
+            content: problemData.content,
+            difficulty: problemData.difficulty,
+            subject: problemData.subject,
+            options: problemData.options,
+            correctAnswer: problemData.correctAnswer,
+            answer: problemData.options[problemData.correctAnswer],
+            solution: `정답: ${problemData.options[problemData.correctAnswer]}`
+          })
+        } else {
+          setProblem(null)
+        }
       }
       setLoading(false)
     }
@@ -105,9 +115,16 @@ export default function ProblemDetailPage() {
   }
 
   const handleSubmit = () => {
-    if (problem.answer && userAnswer.trim().toLowerCase() === problem.answer.toLowerCase()) {
+    if (userAnswer === null) {
+      alert('답안을 선택해주세요.')
+      return
+    }
+    
+    if (problem.correctAnswer !== undefined && userAnswer === problem.correctAnswer) {
+      setIsCorrect(true)
       alert('정답입니다! 🎉')
     } else {
+      setIsCorrect(false)
       alert('틀렸습니다. 다시 시도해보세요.')
     }
   }
@@ -174,16 +191,46 @@ export default function ProblemDetailPage() {
             </div>
           </div>
 
-          {/* 답안 입력 */}
+          {/* 답안 선택 */}
           <div className="bg-white border-2 border-gray-200 rounded-xl p-8 mb-8">
-            <h2 className="text-2xl font-bold text-black mb-4">답안 작성</h2>
-            <textarea
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              placeholder="답안을 입력하세요..."
-              className="w-full h-40 p-4 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none resize-none font-mono"
-            />
-            <div className="flex gap-4 mt-4">
+            <h2 className="text-2xl font-bold text-black mb-4">답안 선택</h2>
+            {problem.options && problem.options.length > 0 ? (
+              <div className="space-y-3 mb-6">
+                {problem.options.map((option, index) => (
+                  <label
+                    key={index}
+                    className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                      userAnswer === index
+                        ? 'border-black bg-gray-50'
+                        : 'border-gray-300 hover:border-gray-400'
+                    } ${isCorrect === true && index === problem.correctAnswer ? 'bg-green-50 border-green-500' : ''} ${isCorrect === false && index === userAnswer ? 'bg-red-50 border-red-500' : ''}`}
+                  >
+                    <input
+                      type="radio"
+                      name="answer"
+                      value={index}
+                      checked={userAnswer === index}
+                      onChange={() => {
+                        setUserAnswer(index)
+                        setIsCorrect(null)
+                      }}
+                      className="mr-4 w-5 h-5 text-black"
+                    />
+                    <span className="text-lg">
+                      {String.fromCharCode(9312 + index)} {option}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            ) : (
+              <textarea
+                value={userAnswer?.toString() || ''}
+                onChange={(e) => setUserAnswer(e.target.value ? parseInt(e.target.value) : null)}
+                placeholder="답안을 입력하세요..."
+                className="w-full h-40 p-4 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none resize-none font-mono"
+              />
+            )}
+            <div className="flex gap-4">
               <button
                 onClick={handleSubmit}
                 className="px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-neutral-800 transition-all"
