@@ -1,7 +1,3 @@
 {
-  "buildCommand": "cd classmate && npm install && npm run build",
-  "outputDirectory": "classmate/.next",
-  "installCommand": "cd classmate && npm install",
   "framework": "nextjs"
 }
-
