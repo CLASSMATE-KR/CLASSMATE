@@ -154,7 +154,75 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 푸터 제거 (요청에 따라 카피라이트 문구 삭제) */}
+      {/* CTA 섹션 */}
+      <section className="bg-black text-white py-20 mt-20">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              지금 바로 시작해보세요
+            </h2>
+            <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+              Classmate와 함께 더 체계적인 학습 관리를 경험해보세요.
+              <br />
+              무료로 시작할 수 있습니다.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/signup"
+                className="px-8 py-4 bg-white text-black rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all transform hover:-translate-y-1 shadow-lg"
+              >
+                무료로 시작하기
+              </Link>
+              <Link
+                href="/login"
+                className="px-8 py-4 bg-transparent text-white rounded-xl font-semibold text-lg border-2 border-white hover:bg-white hover:text-black transition-all"
+              >
+                로그인
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 푸터 */}
+      <footer className="bg-gray-50 border-t border-gray-200 py-12">
+        <div className="container mx-auto px-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-4 gap-8">
+              <div>
+                <h3 className="text-xl font-bold text-black mb-4">CLASSMATE</h3>
+                <p className="text-gray-600 text-sm">
+                  체계적인 학습 관리를 위한 플랫폼
+                </p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-black mb-4">기능</h4>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li>학습 일정 관리</li>
+                  <li>과제 추적</li>
+                  <li>디스코드 연동</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold text-black mb-4">리소스</h4>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li>문제 풀이</li>
+                  <li>학습 자료</li>
+                  <li>커뮤니티</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold text-black mb-4">지원</h4>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li>도움말</li>
+                  <li>문의하기</li>
+                  <li>이용약관</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
