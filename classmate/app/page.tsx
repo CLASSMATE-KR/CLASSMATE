@@ -32,23 +32,36 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 relative overflow-hidden">
+      {/* 배경 장식 */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="aurora-blob w-72 h-72 top-10 -left-16 bg-black/50"></div>
+        <div
+          className="aurora-blob w-96 h-96 top-20 right-0 bg-neutral-700/40"
+          style={{ animationDuration: '22s', animationDelay: '1s' }}
+        ></div>
+        <div
+          className="aurora-blob w-80 h-80 bottom-10 left-1/3 bg-neutral-800/30"
+          style={{ animationDuration: '20s', animationDelay: '2s' }}
+        ></div>
+      </div>
+
       {/* 헤더 */}
-      <header className="container mx-auto px-6 py-6 border-b border-gray-200">
+      <header className="container mx-auto px-6 py-6 border-b border-gray-200 relative z-10">
         <nav className="flex items-center justify-between">
-          <div className="text-2xl font-bold text-black">
+          <div className="text-2xl font-bold text-black animate-fade-in">
             CLASSMATE
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 animate-fade-in" style={{ animationDelay: '0.08s' }}>
             <Link
               href="/login"
-              className="px-4 py-2 text-gray-600 hover:text-black font-medium transition-colors"
+              className="px-4 py-2 text-gray-600 hover:text-black font-medium transition-colors shine-on-hover"
             >
               로그인
             </Link>
             <Link
               href="/signup"
-              className="px-6 py-2 bg-black text-white rounded-lg font-medium hover:bg-neutral-800 transition-all"
+              className="px-6 py-2 bg-black text-white rounded-lg font-medium hover:bg-neutral-800 transition-all pulse-glow shine-on-hover"
             >
               시작하기
             </Link>
@@ -57,28 +70,28 @@ export default function Home() {
       </header>
 
       {/* 메인 섹션 */}
-      <main className="container mx-auto px-6 py-20">
+      <main className="container mx-auto px-6 py-20 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-black">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-black animate-fade-up">
             함께 성장하는
             <br />
             학습의 경험
           </h1>
-          <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto animate-fade-up" style={{ animationDelay: '0.08s' }}>
             CLASSMATE와 함께 더 나은 학습 경험을 만들어보세요.
             <br />
             언제 어디서나 쉽게 접근하고 함께 성장하세요.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up" style={{ animationDelay: '0.14s' }}>
             <Link
               href="/signup"
-              className="px-8 py-4 bg-black text-white rounded-xl font-semibold text-lg hover:bg-neutral-800 transition-all transform hover:-translate-y-1 shadow-lg"
+              className="px-8 py-4 bg-black text-white rounded-xl font-semibold text-lg hover:bg-neutral-800 transition-all transform hover:-translate-y-1 shadow-lg pulse-glow shine-on-hover"
             >
               무료로 시작하기
             </Link>
             <Link
               href="/login"
-              className="px-8 py-4 bg-white text-gray-700 rounded-xl font-semibold text-lg border-2 border-gray-300 hover:border-black transition-all"
+              className="px-8 py-4 bg-white text-gray-700 rounded-xl font-semibold text-lg border-2 border-gray-300 hover:border-black transition-all shine-on-hover"
             >
               로그인
             </Link>
@@ -87,7 +100,7 @@ export default function Home() {
 
         {/* 특징 섹션 */}
         <div className="mt-32 grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-2 shine-on-hover animate-fade-up" style={{ animationDelay: '0.05s' }}>
             <div className="w-12 h-12 bg-black rounded-lg mb-4 flex items-center justify-center">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -97,7 +110,7 @@ export default function Home() {
             <p className="text-gray-600">언제 어디서나 간편하게 접근할 수 있습니다.</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-2 shine-on-hover animate-fade-up" style={{ animationDelay: '0.12s' }}>
             <div className="w-12 h-12 bg-black rounded-lg mb-4 flex items-center justify-center">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -107,7 +120,7 @@ export default function Home() {
             <p className="text-gray-600">다른 사람들과 함께 학습하고 성장하세요.</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-2 shine-on-hover animate-fade-up" style={{ animationDelay: '0.19s' }}>
             <div className="w-12 h-12 bg-black rounded-lg mb-4 flex items-center justify-center">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -120,13 +133,13 @@ export default function Home() {
       </main>
 
       {/* 소개 섹션 */}
-      <section className="container mx-auto px-6 py-20">
+      <section className="container mx-auto px-6 py-20 relative z-10">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-black mb-8 text-center">
+          <h2 className="text-4xl font-bold text-black mb-8 text-center animate-fade-up">
             학습 관리 프로그램 Classmate와 디스코드 연동 기능 소개
           </h2>
           
-          <div className="space-y-6 text-gray-700 leading-relaxed">
+          <div className="space-y-6 text-gray-700 leading-relaxed animate-fade-up" style={{ animationDelay: '0.12s' }}>
             <p>
               Classmate는 학생들이 학습과 학교생활을 체계적으로 관리할 수 있도록 설계된 학습 관리 프로그램이다. 과제, 시험 일정, 수업 계획과 같은 학습 정보를 한곳에 정리할 수 있어 개인 학습 관리에 도움을 준다. 디지털 환경에 익숙한 학생들을 고려해 직관적인 인터페이스를 제공하며, 복잡한 설정 없이도 기본적인 기능을 사용할 수 있도록 구성되어 있다.
             </p>
@@ -155,27 +168,28 @@ export default function Home() {
       </section>
 
       {/* CTA 섹션 */}
-      <section className="bg-black text-white py-20 mt-20">
-        <div className="container mx-auto px-6">
+      <section className="bg-black text-white py-20 mt-20 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-30 gradient-veil"></div>
+        <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 animate-fade-up">
               지금 바로 시작해보세요
             </h2>
-            <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto animate-fade-up" style={{ animationDelay: '0.08s' }}>
               Classmate와 함께 더 체계적인 학습 관리를 경험해보세요.
               <br />
               무료로 시작할 수 있습니다.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up" style={{ animationDelay: '0.14s' }}>
               <Link
                 href="/signup"
-                className="px-8 py-4 bg-white text-black rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all transform hover:-translate-y-1 shadow-lg"
+                className="px-8 py-4 bg-white text-black rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all transform hover:-translate-y-1 shadow-lg shine-on-hover"
               >
                 무료로 시작하기
               </Link>
               <Link
                 href="/login"
-                className="px-8 py-4 bg-transparent text-white rounded-xl font-semibold text-lg border-2 border-white hover:bg-white hover:text-black transition-all"
+                className="px-8 py-4 bg-transparent text-white rounded-xl font-semibold text-lg border-2 border-white hover:bg-white hover:text-black transition-all shine-on-hover"
               >
                 로그인
               </Link>
@@ -185,17 +199,17 @@ export default function Home() {
       </section>
 
       {/* 푸터 */}
-      <footer className="bg-gray-50 border-t border-gray-200 py-12">
+      <footer className="bg-gray-50 border-t border-gray-200 py-12 relative z-10">
         <div className="container mx-auto px-6">
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-4 gap-8">
-              <div>
+              <div className="animate-fade-up">
                 <h3 className="text-xl font-bold text-black mb-4">CLASSMATE</h3>
                 <p className="text-gray-600 text-sm">
                   체계적인 학습 관리를 위한 플랫폼
                 </p>
               </div>
-              <div>
+              <div className="animate-fade-up" style={{ animationDelay: '0.05s' }}>
                 <h4 className="font-semibold text-black mb-4">기능</h4>
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li>학습 일정 관리</li>
@@ -203,7 +217,7 @@ export default function Home() {
                   <li>디스코드 연동</li>
                 </ul>
               </div>
-              <div>
+              <div className="animate-fade-up" style={{ animationDelay: '0.1s' }}>
                 <h4 className="font-semibold text-black mb-4">리소스</h4>
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li>문제 풀이</li>
@@ -211,7 +225,7 @@ export default function Home() {
                   <li>커뮤니티</li>
                 </ul>
               </div>
-              <div>
+              <div className="animate-fade-up" style={{ animationDelay: '0.15s' }}>
                 <h4 className="font-semibold text-black mb-4">지원</h4>
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li>도움말</li>

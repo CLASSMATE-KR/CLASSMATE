@@ -24,3 +24,84 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ----- 공용 애니메이션 유틸 ----- */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08); }
+  50% { box-shadow: 0 18px 55px rgba(0, 0, 0, 0.14); }
+  100% { box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(20px, -12px) scale(1.05); }
+  66% { transform: translate(-18px, 18px) scale(0.98); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-fade-in {
+  opacity: 0;
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-fade-up {
+  opacity: 0;
+  animation: fadeIn 0.9s ease-out forwards;
+}
+
+.animate-float-slow {
+  animation: float 8s ease-in-out infinite;
+}
+
+.pulse-glow {
+  animation: pulseGlow 3.5s ease-in-out infinite;
+}
+
+.aurora-blob {
+  position: absolute;
+  filter: blur(60px);
+  opacity: 0.5;
+  background: radial-gradient(circle at 30% 30%, #111827 0%, transparent 45%);
+  mix-blend-mode: multiply;
+  animation: blob 18s ease-in-out infinite;
+}
+
+.gradient-veil {
+  background: linear-gradient(120deg, #0f172a 0%, #111827 50%, #0f172a 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 12s ease infinite;
+}
+
+.shine-on-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-on-hover::after {
+  content: "";
+  position: absolute;
+  inset: -120% -60%;
+  background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.8s ease;
+}
+
+.shine-on-hover:hover::after {
+  transform: translateX(100%);
+}
