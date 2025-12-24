@@ -15,7 +15,8 @@ export default function ProblemUploadPage() {
     content: '',
     subject: '',
     difficulty: 'medium' as 'easy' | 'medium' | 'hard',
-    answer: '',
+    options: ['', '', '', ''] as string[], // 객관식 선택지 (4개)
+    correctAnswer: 0 as number, // 정답 번호 (0-3)
     solution: ''
   })
   const [fileContent, setFileContent] = useState('')
@@ -64,7 +65,8 @@ export default function ProblemUploadPage() {
             content: parsed.content || '',
             subject: parsed.subject || '',
             difficulty: parsed.difficulty || 'medium',
-            answer: parsed.answer || '',
+            options: parsed.options || ['', '', '', ''],
+            correctAnswer: parsed.correctAnswer !== undefined ? parsed.correctAnswer : 0,
             solution: parsed.solution || ''
           })
         } else {
@@ -84,6 +86,19 @@ export default function ProblemUploadPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // 객관식 선택지 검증 (최소 2개 이상 입력되어야 함)
+    const validOptions = formData.options.filter(opt => opt.trim() !== '')
+    if (validOptions.length < 2) {
+      alert('객관식 선택지를 최소 2개 이상 입력해주세요.')
+      return
+    }
+    
+    // 정답 번호 검증
+    if (formData.correctAnswer < 0 || formData.correctAnswer >= formData.options.length || formData.options[formData.correctAnswer].trim() === '') {
+      alert('올바른 정답 번호를 선택해주세요.')
+      return
+    }
     
     // TODO: Supabase에 문제 저장
     console.log('문제 저장:', formData)
@@ -276,15 +291,40 @@ export default function ProblemUploadPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-black mb-2">
-                    정답
+                    객관식 선택지 * (최소 2개 이상 입력)
                   </label>
-                  <input
-                    type="text"
-                    value={formData.answer}
-                    onChange={(e) => setFormData({ ...formData, answer: e.target.value })}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none"
-                    placeholder="정답을 입력하세요"
-                  />
+                  <div className="space-y-3">
+                    {formData.options.map((option, index) => (
+                      <div key={index} className="flex items-center gap-3">
+                        <span className="text-lg font-medium text-gray-700 w-8">
+                          {String.fromCharCode(9312 + index)}
+                        </span>
+                        <input
+                          type="text"
+                          value={option}
+                          onChange={(e) => {
+                            const newOptions = [...formData.options]
+                            newOptions[index] = e.target.value
+                            setFormData({ ...formData, options: newOptions })
+                          }}
+                          className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none"
+                          placeholder={`선택지 ${index + 1}을 입력하세요`}
+                        />
+                        <input
+                          type="radio"
+                          name="correctAnswer"
+                          checked={formData.correctAnswer === index}
+                          onChange={() => setFormData({ ...formData, correctAnswer: index })}
+                          className="w-5 h-5 text-black"
+                          disabled={option.trim() === ''}
+                        />
+                        <span className="text-sm text-gray-600 w-12">정답</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-sm text-gray-500">
+                    각 선택지를 입력하고 정답인 선택지의 라디오 버튼을 선택하세요.
+                  </p>
                 </div>
 
                 <div>

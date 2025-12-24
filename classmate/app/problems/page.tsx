@@ -6,10 +6,21 @@ import Link from 'next/link'
 import { supabaseClient } from '@/lib/supabase-client'
 import { getAllProblems, type Problem } from '@/lib/problems-data'
 
+// 문제 목록용 타입 (목록에서는 일부 필드만 필요)
+interface ProblemListItem {
+  id: string
+  title: string
+  description: string
+  difficulty: 'easy' | 'medium' | 'hard'
+  subject: string
+  category: string
+  createdAt: string
+}
+
 export default function ProblemsPage() {
   const router = useRouter()
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
-  const [problems, setProblems] = useState<Problem[]>([])
+  const [problems, setProblems] = useState<ProblemListItem[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -20,7 +31,7 @@ export default function ProblemsPage() {
       if (session) {
         // 파싱된 문제 데이터 사용
         const allProblems = getAllProblems()
-        const problemList = allProblems.map(p => ({
+        const problemList: ProblemListItem[] = allProblems.map(p => ({
           id: p.id.toString(),
           title: p.title,
           description: p.content,

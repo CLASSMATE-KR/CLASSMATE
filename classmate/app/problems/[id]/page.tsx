@@ -223,12 +223,11 @@ export default function ProblemDetailPage() {
                 ))}
               </div>
             ) : (
-              <textarea
-                value={userAnswer?.toString() || ''}
-                onChange={(e) => setUserAnswer(e.target.value ? parseInt(e.target.value) : null)}
-                placeholder="답안을 입력하세요..."
-                className="w-full h-40 p-4 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none resize-none font-mono"
-              />
+              <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-6 mb-6">
+                <p className="text-yellow-800 font-medium">
+                  이 문제는 객관식 형식이 아닙니다. 문제 데이터에 선택지가 없습니다.
+                </p>
+              </div>
             )}
             <div className="flex gap-4">
               <button
