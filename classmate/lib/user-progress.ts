@@ -83,6 +83,10 @@ export function recordProblemAttempt(
     progress.correctProblems.push(problemId)
     // 포인트 추가 (처음 맞춘 경우에만)
     progress.totalPoints += calculatePoints(difficulty)
+  } else if (!isCorrect && !alreadyCorrect) {
+    // 틀린 경우 포인트 차감 (처음 틀린 경우에만)
+    // 포인트가 0 미만으로 내려가지 않도록 보호
+    progress.totalPoints = Math.max(0, progress.totalPoints - 5)
   }
 
   saveUserProgress(progress)

@@ -155,14 +155,24 @@ export default function ProblemDetailPage() {
       
       // 틀린 경우에도 기록 (풀었다고 표시)
       if (user && problem) {
+        const beforeProgress = getUserProgress(user.id)
+        const beforePoints = beforeProgress.totalPoints
         recordProblemAttempt(
           user.id,
           parseInt(problemId),
           false,
           problem.difficulty
         )
+        const afterProgress = getUserProgress(user.id)
+        const pointsLost = beforePoints - afterProgress.totalPoints
+        if (pointsLost > 0) {
+          alert(`틀렸습니다. (-${pointsLost} 포인트) 다시 시도해보세요.`)
+        } else {
+          alert('틀렸습니다. 다시 시도해보세요.')
+        }
+      } else {
+        alert('틀렸습니다. 다시 시도해보세요.')
       }
-      alert('틀렸습니다. 다시 시도해보세요.')
     }
   }
 
