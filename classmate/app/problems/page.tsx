@@ -108,6 +108,12 @@ export default function ProblemsPage() {
             >
               문제 풀이
             </Link>
+            <Link
+              href="/profile"
+              className="px-4 py-2 text-gray-600 hover:text-black font-medium transition-colors"
+            >
+              마이페이지
+            </Link>
             <button
               onClick={async () => {
                 await supabaseClient.auth.signOut()

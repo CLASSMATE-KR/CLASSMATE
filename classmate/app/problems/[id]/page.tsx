@@ -5,6 +5,8 @@ import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { supabaseClient } from '@/lib/supabase-client'
 import { getProblemById, type Problem as ProblemData } from '@/lib/problems-data'
+import { recordProblemAttempt, getUserProgress } from '@/lib/user-progress'
+import type { User } from '@supabase/supabase-js'
 
 interface Problem {
   id: string
@@ -30,30 +32,35 @@ export default function ProblemDetailPage() {
   const [userAnswer, setUserAnswer] = useState<number | null>(null)
   const [showSolution, setShowSolution] = useState(false)
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
+  const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabaseClient.auth.getSession()
       setIsAuthenticated(!!session)
       
-      if (session && problemId) {
-        // 파싱된 문제 데이터에서 찾기
-        const problemData = getProblemById(parseInt(problemId))
-        if (problemData) {
-          setProblem({
-            id: problemId,
-            title: problemData.title,
-            description: problemData.category,
-            content: problemData.content,
-            difficulty: problemData.difficulty,
-            subject: problemData.subject,
-            options: problemData.options,
-            correctAnswer: problemData.correctAnswer,
-            answer: problemData.options[problemData.correctAnswer],
-            solution: `정답: ${problemData.options[problemData.correctAnswer]}`
-          })
-        } else {
-          setProblem(null)
+      if (session) {
+        setUser(session.user)
+        
+        if (problemId) {
+          // 파싱된 문제 데이터에서 찾기
+          const problemData = getProblemById(parseInt(problemId))
+          if (problemData) {
+            setProblem({
+              id: problemId,
+              title: problemData.title,
+              description: problemData.category,
+              content: problemData.content,
+              difficulty: problemData.difficulty,
+              subject: problemData.subject,
+              options: problemData.options,
+              correctAnswer: problemData.correctAnswer,
+              answer: problemData.options[problemData.correctAnswer],
+              solution: `정답: ${problemData.options[problemData.correctAnswer]}`
+            })
+          } else {
+            setProblem(null)
+          }
         }
       }
       setLoading(false)
@@ -122,9 +129,39 @@ export default function ProblemDetailPage() {
     
     if (problem.correctAnswer !== undefined && userAnswer === problem.correctAnswer) {
       setIsCorrect(true)
-      alert('정답입니다! 🎉')
+      
+      // 사용자 진행도 기록
+      if (user && problem) {
+        const beforeProgress = getUserProgress(user.id)
+        const beforePoints = beforeProgress.totalPoints
+        recordProblemAttempt(
+          user.id,
+          parseInt(problemId),
+          true,
+          problem.difficulty
+        )
+        const afterProgress = getUserProgress(user.id)
+        const pointsEarned = afterProgress.totalPoints - beforePoints
+        if (pointsEarned > 0) {
+          alert(`정답입니다! 🎉 (+${pointsEarned} 포인트)`)
+        } else {
+          alert('정답입니다! 🎉 (이미 풀었던 문제입니다)')
+        }
+      } else {
+        alert('정답입니다! 🎉')
+      }
     } else {
       setIsCorrect(false)
+      
+      // 틀린 경우에도 기록 (풀었다고 표시)
+      if (user && problem) {
+        recordProblemAttempt(
+          user.id,
+          parseInt(problemId),
+          false,
+          problem.difficulty
+        )
+      }
       alert('틀렸습니다. 다시 시도해보세요.')
     }
   }
@@ -146,9 +183,15 @@ export default function ProblemDetailPage() {
             </Link>
             <Link
               href="/problems"
-              className="px-4 py-2 text-black font-medium border-b-2 border-black"
+              className="px-4 py-2 text-gray-600 hover:text-black font-medium transition-colors"
             >
               문제 풀이
+            </Link>
+            <Link
+              href="/profile"
+              className="px-4 py-2 text-gray-600 hover:text-black font-medium transition-colors"
+            >
+              마이페이지
             </Link>
             <button
               onClick={async () => {
