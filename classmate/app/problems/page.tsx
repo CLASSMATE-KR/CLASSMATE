@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabaseClient } from '@/lib/supabase-client'
 import { getAllProblems, type Problem } from '@/lib/problems-data'
+import { handleLogout } from '@/lib/auth-utils'
 
 // 문제 목록용 타입 (목록에서는 일부 필드만 필요)
 interface ProblemListItem {
@@ -116,8 +117,13 @@ export default function ProblemsPage() {
             </Link>
             <button
               onClick={async () => {
-                await supabaseClient.auth.signOut()
-                router.push('/')
+                try {
+                  await handleLogout()
+                  router.push('/')
+                } catch (error) {
+                  console.error('로그아웃 실패:', error)
+                  router.push('/')
+                }
               }}
               className="px-4 py-2 text-gray-600 hover:text-black font-medium transition-colors"
             >

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabaseClient } from '@/lib/supabase-client'
 import { getUserStats } from '@/lib/user-progress'
+import { handleLogout } from '@/lib/auth-utils'
 import type { User } from '@supabase/supabase-js'
 
 export default function DashboardPage() {
@@ -51,10 +52,18 @@ export default function DashboardPage() {
     return () => subscription.unsubscribe()
   }, [router])
 
-  const handleLogout = async () => {
-    await supabaseClient.auth.signOut()
-    router.push('/login')
-    router.refresh()
+  const handleLogoutClick = async () => {
+    try {
+      await handleLogout()
+      // 로그아웃 후 즉시 로그인 페이지로 이동
+      router.push('/login')
+      router.refresh()
+    } catch (error) {
+      console.error('로그아웃 실패:', error)
+      // 오류가 발생해도 로그인 페이지로 이동
+      router.push('/login')
+      router.refresh()
+    }
   }
 
   if (loading) {
@@ -91,7 +100,7 @@ export default function DashboardPage() {
                 마이페이지
               </Link>
               <button
-                onClick={handleLogout}
+                onClick={handleLogoutClick}
                 className="px-6 py-2 bg-black hover:bg-neutral-800 text-white rounded-xl font-medium transition-colors"
               >
                 로그아웃

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { supabaseClient } from '@/lib/supabase-client'
 import { getProblemById, type Problem as ProblemData } from '@/lib/problems-data'
 import { recordProblemAttempt, getUserProgress } from '@/lib/user-progress'
+import { handleLogout } from '@/lib/auth-utils'
 import type { User } from '@supabase/supabase-js'
 
 interface Problem {
@@ -205,8 +206,13 @@ export default function ProblemDetailPage() {
             </Link>
             <button
               onClick={async () => {
-                await supabaseClient.auth.signOut()
-                router.push('/')
+                try {
+                  await handleLogout()
+                  router.push('/')
+                } catch (error) {
+                  console.error('로그아웃 실패:', error)
+                  router.push('/')
+                }
               }}
               className="px-4 py-2 text-gray-600 hover:text-black font-medium transition-colors"
             >

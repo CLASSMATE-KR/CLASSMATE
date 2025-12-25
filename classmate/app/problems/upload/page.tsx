@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabaseClient } from '@/lib/supabase-client'
+import { handleLogout } from '@/lib/auth-utils'
 
 export default function ProblemUploadPage() {
   const router = useRouter()
@@ -130,8 +131,13 @@ export default function ProblemUploadPage() {
             </Link>
             <button
               onClick={async () => {
-                await supabaseClient.auth.signOut()
-                router.push('/')
+                try {
+                  await handleLogout()
+                  router.push('/')
+                } catch (error) {
+                  console.error('로그아웃 실패:', error)
+                  router.push('/')
+                }
               }}
               className="px-4 py-2 text-gray-600 hover:text-black font-medium transition-colors"
             >
